@@ -1,0 +1,327 @@
+SELECT id,batsman,season,batsman_runs
+   FROM deliveries,matches
+   WHERE  deliveries.match_id = matches.id
+    ORDER BY batsman asc,season desc,id desc;
+
+
+
+
+select batsman,count(distinct match_id),count(batsman),sum(batsman_runs) from deliveries group by batsman limit 10; 
+
+select max(runs),bats from (select sum(batsman_runs) as runs,match_id,batsman as bats from deliveries where (inning='1' or inning='2')  group by match_id,batsman) as topruns group by bats;
+
+
+UPDATE
+    Batsman1 AS dest,
+    (select max(runs) as highest,bats from (select sum(batsman_runs) as runs,match_id,batsman as bats from deliveries where (inning='1' or inning='2')  group by match_id,batsman) as topruns group by bats	) AS src
+SET
+    dest.highest = src.highest
+WHERE
+    dest.batsman = src.bats
+;
+
+ UPDATE
+    ->     Batsman1 AS dest,
+    ->     (select batsman as bats,count(inning) as outdis from deliveries group by player_dismissed) AS src
+    -> SET
+    ->     dest.no_of_dismissals = src.outdis
+    -> WHERE
+    ->     dest.batsman = src.bats
+    -> ;
+select batsman, (runs/innings) from Batsman1;
+
+
+select player_dismissed,count(inning) from deliveries group by player_dismissed;
+ 
+
+UPDATE batsman SET average=0 WHERE average is null;
+
+
+
+select batsman, (runs/no_of_dismissals) from Batsman1;
+
+UPDATE
+    Batsman AS dest,
+    (select batsman as bats, (runs/no_of_dismissals)  as avg from Batsman) AS 
+src
+SET
+    dest.average = src.avg
+WHERE
+    dest.batsman = src.bats
+;
+
+
+select batsman, (runs*100)/balls from Batsman1;
+
+
+UPDATE
+    Batsman AS dest,
+    (select batsman as bats, ((runs*100)/balls) as strike from Batsman) AS 
+src
+SET
+    dest.strike_rate = src.strike
+WHERE
+    dest.batsman = src.bats
+;
+
+
+UPDATE
+    Batsman1 AS dest,
+    (select batsman as bats,count(inning) as outdis from deliveries group by player_dismissed) AS src
+SET
+    dest.no_of_dismissals = src.outdis
+WHERE
+    dest.batsman = src.bats
+;
+ select no_of_dismissals from batsman1 where no_of_dismissals is NULL;
+
+
+
+SELECT distinct batsman,count(batsman_runs)
+FROM deliveries
+WHERE batsman_runs = 4 group by batsman;
+
+
+
+UPDATE
+    Batsman1 AS dest,
+    (SELECT distinct batsman as bats,count(batsman_runs) as six FROM deliveries WHERE batsman_runs = 6 group by batsman) AS src
+SET
+    dest.sixes = src.six
+WHERE
+    dest.batsman = src.bats
+;
+
+
+
+SELECT distinct match_id,batsman,sum(batsman_runs)
+FROM deliveries group by batsman,match_id;
+
+select max(runs),bats from (select sum(batsman_runs) as runs,match_id,batsman as bats from deliveries where (inning='1' or inning='2')  group by match_id,batsman) as topruns group by bats;
+ 
+
+select count(runs),bats,id from (SELECT distinct match_id as id ,batsman as bats,sum(batsman_runs) as runs FROM deliveries group by batsman,match_id group by match_id,batsman) as fifty group by bats;
+
+
+
+insert into bowler(bowler,innings,balls,runs)select bowler,count(distinct match_id) as innings,count(bowler) as balls,sum(total_runs) as runs from deliveries group by bowler;
+
+
+
+select bowler,count(player_dismissed) from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler limit 10;
+
+
+
+
+UPDATE
+    Bowler AS dest,
+    (select bowler as bowl,count(player_dismissed) as outs  from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler) AS src
+SET
+    dest.wickets = src.outs
+WHERE
+    dest.bowler = src.bowl
+;
+
+UPDATE bowler SET 5W_haul=0 WHERE 5W_haul is null;
+
+
+
+
+select bowler as bowl,count(player_dismissed) as outs  from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler,match_id;
+
+
+
+
+select count(4s),bowl from (select bowler as bowl,count(player_dismissed) as 4s  from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler,match_id) as topruns where 4s = '4' group by bowl;
+
+
+UPDATE
+    Bowler AS dest,
+    (select count(5s) as 5s,bowl from (select bowler as bowl,count(player_dismissed) as 5s  from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler,match_id) as topruns where 5s >= '5' group by bowl) AS src
+SET
+    dest.5W_haul = src.5s
+WHERE
+    dest.bowler = src.bowl
+;
+
+UPDATE bowler SET average = 0 WHERE average is null;
+
+
+select count(5s),bowl from (select bowler as bowl,count(player_dismissed) as 5s  from deliveries where dismissal_kind = 'bowled' or dismissal_kind = 'caught' or dismissal_kind = 'caught and bowled' or dismissal_kind = 'hit wicket' or dismissal_kind = 'lbw' or dismissal_kind = 'stumped' group by bowler,match_id) as topruns where 5s >= '5' group by bowl;
+
+
+
+
+select bowler as bowl,sum(total_runs) as run from deliveries group by bowler,match_id,overs limit 10;
+
+
+
+ select bowl,count(run) from (select bowler as bowl,sum(total_runs) as run from deliveries group by bowler,match_id,overs)as maiden where run = '0' group by bowl;
+
+
+UPDATE
+    Bowler AS dest,
+    (select bowl,count(run) as runs from (select bowler as bowl,sum(total_runs) as run from deliveries group by bowler,match_id,overs)as maiden where run = '0' group by bowl) AS src
+SET
+    dest.maiden = src.runs
+WHERE
+    dest.bowler = src.bowl
+;
+
+
+
+select bowler as bowl, (runs/wickets) as runs from Bowler; 
+
+
+UPDATE
+    Bowler AS dest,
+    (select bowler as bowl, (runs/wickets) as runs from Bowler) AS src
+SET
+    dest.average = src.runs
+WHERE
+    dest.bowler = src.bowl
+;
+
+UPDATE bowler SET strike_rate=0 WHERE strike_rate is null;
+
+
+
+
+
+UPDATE
+    Bowler AS dest,
+    (select bowler as bowl, (balls/wickets) runs from Bowler) AS src
+SET
+    dest.strike_rate = src.runs
+WHERE
+    dest.bowler = src.bowl
+;
+
+
+insert into stadium(season,stadium_name,city) select distinct season,venue,city from matches group by venue,season;
+
+select ,count(run) from (select match_id as id,sum(total_runs) as run from deliveries group by innings,match_id)as maiden where run = '0' group by bowl; 
+
+
+select match_id as id,sum(total_runs) as run from deliveries where inning = 1 group by inning,match_id limit 10;
+
+ select id,year,avg(runs),name from (select match_id as id,season as year,sum(total_runs) as runs,stadium_name as name from deliveries where inning=1 group by match_id,inning)as average group by name,year;
+
+
+UPDATE
+    stadium AS dest,
+    (select id,year,avg(runs) as qwe,name from (select match_id as id,season as year,sum(total_runs) as runs,stadium_name as name from deliveries where inning=1 group by match_id,inning)as average group by name,year) AS src
+SET
+    dest.1st_innings_avg_score = src.qwe
+WHERE
+    dest.stadium_name = src.name
+;
+
+select won.ven,won.wons, team.teams from
+(select season,venue as ven,count(team1)as wons from matches 
+where team1 = winner group by season,venue)as won,
+(select season,venue,count(team1)as teams from matches 
+group by season,venue)as team group by won.ven,team.season;
+
+
+
+select season,venue as ven,count(team2)as wons from matches 
+where not team2 = winner group by season,venue;
+
+
+
+
+select season,venue,count(team1)as teams from matches 
+group by season,venue
+
+
+
+UPDATE
+    stadium AS dest,
+    (select season,stadium_name as ven,(matches_won_bating_2nd*100)/matches_played as ave from stadium) AS src
+SET
+    dest.win_percentage_batting_second = src.ave
+WHERE
+    dest.stadium_name = src.ven
+;
+
+
+
+UPDATE stadium SET 1st = 0 WHERE 1st is null;
+
+select season,stadium_name,(1st*100)/matches as ave from stadium;
+
+
+select season,venue as ven,count(toss_winner)as wons from matches where toss_winner = winner group by season,venue;
+
+
+UPDATE
+    stadium AS dest,
+    (select season,stadium_name as ven,(toss_won*100)/matches_played as ave from stadium) AS src
+SET
+    dest.significance_of_toss = src.ave
+WHERE
+    dest.stadium_name = src.ven
+;
+
+select season,stadium_name as ven,(toss_won*100)/matches_played as ave from stadium;
+
+
+UPDATE
+    stadium AS dest,
+    (select season,venue as ven,count(toss_winner)as wons from matches where toss_winner = winner group by season,venue) AS src
+SET
+    dest.toss_won = src.wons
+WHERE
+    dest.stadium_name = src.ven
+;
+
+
+
+
+
+
+
+
+
+
+
+
+select season,stadium_name,(significance_of_toss
+*100)/matches_played as ave from stadium;
+
+
+
+UPDATE
+    demo AS dest,
+    ((select distinct stadium_name  from stadium)as sta) AS src
+SET
+    dest.stadium = src.sta
+;
+
+
+
+ UPDATE
+         demo AS dest,
+     ( select sta from (select stadium_name as sta  from stadium group by stadium_name)as top) AS src
+    SET
+       dest.stadium = src.sta
+    ;
+
+
+  UPDATE
+         stadium AS dest,
+     ( select sr_no from demo1) AS src
+    SET
+       dest.unique = src.sr_no
+     WHERE
+	dest.stadium_name=src.stadium_name
+    ;
+UPDATE
+    seasonbating AS dest,
+    (select sr_no,player from demo) AS src
+SET
+    dest.unique_no = src.sr_no
+WHERE
+    dest.player = src.player
+;

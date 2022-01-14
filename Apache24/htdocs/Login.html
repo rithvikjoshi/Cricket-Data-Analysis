@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Sign in</title>
+  <link rel="stylesheet" type/css" href="style.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<meta name="google-signin-client_id" content="<Your ID>">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="scri.js"></script>
+<style>
+  .g-signin2{
+margin-left: 500px;
+margin-top: 200px;
+  }
+  .data{
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <h1>CRICKET DATA ANALYSIS</h1>
+        <div class="topnav">
+            <a class="active">Login Page</a>
+          </div>
+          <div class="g-signin2" data-onsuccess="onSignin"></div>
+          <div class="data">
+            <p>Profile Details</p>
+            <img id="pic" class="img-circle" width="100px" height="100px"/>
+            <p>Email Address</p>
+            <p id="email" class="alert alert-danger"></p>
+            <button onclick="signOut()" class="btn btn-danger">Sign Out</button>
+            <div class="ana">
+              <a href="home.html">Lets Start the ANALYSIS!!!</a>
+              </div>
+          </div>
+</body>
+</html>
