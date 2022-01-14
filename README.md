@@ -1,1 +1,6 @@
-# Cricket-Data-Analysis..123
+# Cricket-Data-Analysis
+
+# How to Run
+
+1)
+2)
