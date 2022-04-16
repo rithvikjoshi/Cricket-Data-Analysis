@@ -1,4 +1,4 @@
-SELECT id,batsman,season,batsman_runs
+..SELECT id,batsman,season,batsman_runs
    FROM deliveries,matches
    WHERE  deliveries.match_id = matches.id
     ORDER BY batsman asc,season desc,id desc;
